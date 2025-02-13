@@ -16,7 +16,6 @@ let BROWN = "#6e4616";
 let JOE = "#444444";
 
 /* Helper Functions */
-// function randTransform()
 
 /* Drawing Functions */
 function drawBook() {
