@@ -124,7 +124,7 @@ function coverPage(timestamp) {
     drawBook();
     x = canvas.width/2;
     y = canvas.height/2;
-    drawSpinningStar(x, y);
+    // drawSpinningStar(x, y);
     y=y-12
     drawJoe(x, y);
 
