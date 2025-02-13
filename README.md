@@ -17,5 +17,6 @@ The first number is the position of the page. The second number is the actual ch
 4. Wand modifying station. Need to use to modify missle wand to not suck. 
 5. Chest that requires Ouroboros to make a full circle. Reach chest through 4. 
 6. (9) Basic puzzle with translations and rotations. Unlocks snake food. Requires math wand. 
-7. (4, 3) Fishing wand and pond. Unlocks magic missle wand. Reach through 7. 
+7. (3, 4) Fishing wand and pond. Unlocks magic missle wand. Reach through 7. 
 8. Platforms to reach 6. 
+9. Victory screen made from SVG tags and curves. 
