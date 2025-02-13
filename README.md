@@ -9,5 +9,5 @@ Some pages will have toggles that only exist on those pages, and those toggles w
 
 ## Pages
 I need 12 in total - one per checkbox, besides the initial checkbox. 
-1. Table of Contents. Allows for switching between pages with links. 
-2. Couple of enemies moving 
+2. Table of Contents. Allows for switching between pages with links. 
+4. Couple of enemies moving 
