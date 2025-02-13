@@ -1,4 +1,4 @@
-# THE NON-LINEAR BOOK OF FANTASY
+# THE BOOK OF JOE
 
 I want this to have one page per checkbox with a character that stays in place when the page changes. 
 He'll have to move between the pages to complete the story, which includes:
