@@ -7,6 +7,8 @@ let x = 0;
 let y = 0;
 let joeX = 0;
 let joeY = 0;
+let joeVelY = 0;
+const GRAVITY = 0.5;
 // Time Tracking
 let lastTime = 0;
 let delta = 0;
@@ -51,6 +53,16 @@ function drawBook() {
     ctx.fillText("BOOK OF JOE", canvas.width / 2, canvas.height / 4.5);
 
     ctx.restore();
+}
+
+function updateJoe() {
+    joeVelY += GRAVITY * (delta/100);
+    joeY += joeVelY;
+
+    if (joeY + 30 >= canvas.height) {
+        joeY = canvas.height - 30;
+        joeVelY = 0;
+    }
 }
 
 function drawJoe(x, y) {
@@ -114,16 +126,20 @@ function drawSpinningStar(x, y) {
 }
 
 /* Draw the scene */
-function titlePage(timestamp) {
+function titlePage(timestamp, running) {
     // Update time
     delta = timestamp - lastTime;
     lastTime = timestamp;
-    
+
     // Draw
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    updateJoe();
     drawJoe(joeX, joeY);
 
     // Loop
-    window.requestAnimationFrame(titlePage);
+    if (running) {
+        window.requestAnimationFrame(() => titlePage(performance.now(), true));
+    }
 }
 
 function coverPage(timestamp) {
@@ -141,17 +157,23 @@ function coverPage(timestamp) {
     drawJoe(joeX, joeY);
 }
 
+let turned = false; // Track if page has turned
 function animatePageTurn(i, prevPage) {
     ctx.save();
     if (i <= 50) {
         ctx.save();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.scale(1 - i / 50, 1);
+        // Manually draw page under turning page
+        titlePage(performance.now(), false);
+        // Turn page
+        ctx.transform(1-i/50, 0, 0, 1, 0, 0);
         prevPage(performance.now());
         ctx.restore();
         window.requestAnimationFrame(() => animatePageTurn(i + 1, prevPage));
     }
-    ctx.restore();
+    else {
+        window.requestAnimationFrame(() => titlePage(performance.now(), true));
+    }
 }
 
 /* Setup Buttons */
@@ -160,14 +182,13 @@ document.getElementById('nextButton').addEventListener('click', function() {
     sessionStorage.setItem("joeX", joeX);
     sessionStorage.setItem("joeY", joeY);
 
-    window.location.href = 'titlePage.html';
+    window.location.href = 'chap2.html';
 });
 
 /* Recover Joe */
-joeX = sessionStorage.getItem('joeX');
-joeY = sessionStorage.getItem('joeY');
+joeX = Number(sessionStorage.getItem('joeX'));
+joeY = Number(sessionStorage.getItem('joeY'));
 
 /* Begin Drawing */
 lastTime = performance.now();
 animatePageTurn(0, coverPage);
-// window.requestAnimationFrame(titlePage);
