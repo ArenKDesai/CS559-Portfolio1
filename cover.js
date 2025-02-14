@@ -5,6 +5,8 @@ const ctx = canvas.getContext('2d');
 // Position
 let x = 0;
 let y = 0;
+let joeX = 0;
+let joeY = 0;
 // Time Tracking
 let lastTime = 0;
 let delta = 0;
@@ -14,8 +16,6 @@ let OLDPAPER2 = "#e5d6c7";
 let DARKBROWN = "#523211";
 let BROWN = "#6e4616";
 let JOE = "#444444";
-
-/* Helper Functions */
 
 /* Drawing Functions */
 function drawBook() {
@@ -124,12 +124,22 @@ function coverPage(timestamp) {
     x = canvas.width/2;
     y = canvas.height/2;
     drawSpinningStar(x, y);
-    y=y-12
-    drawJoe(x, y);
+    joeX = x;
+    joeY = y-12;
+    drawJoe(joeX, joeY);
 
     // Loop
     window.requestAnimationFrame(coverPage);
 }
+
+/* Setup Buttons */
+document.getElementById('nextButton').addEventListener('click', function() {
+    // Store the coordinates
+    sessionStorage.setItem("joeX", joeX);
+    sessionStorage.setItem("joeY", joeY);
+
+    window.location.href = 'titlePage.html';
+});
 
 /* Begin Drawing */
 lastTime = performance.now();

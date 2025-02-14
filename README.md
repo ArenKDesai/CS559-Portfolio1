@@ -7,6 +7,7 @@ He'll have to move between the pages to complete the story, which includes:
 3. Navigating through platforms
 4. Page turning
 5. Lines are jittery, like hand-drawn
+
 Some pages will have toggles that only exist on those pages, and those toggles will be necesssary for progressing. 
 
 ## Pages
