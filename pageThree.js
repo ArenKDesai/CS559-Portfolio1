@@ -1,3 +1,5 @@
+import { ouroboros } from './interactables/ouroboros.js';
+
 /* Setup */
 // Canvas
 const canvas = document.getElementById('myCanvas');
@@ -207,6 +209,10 @@ function drawPlatforms() {
     ctx.restore();
 }
 
+function drawOuroboros() {
+    ouroboros(ctx);
+}
+
 /* Current Page */
 function pageThree(timestamp, running) {
     // Update time
@@ -222,6 +228,7 @@ function pageThree(timestamp, running) {
         ctx.fillStyle = OLDPAPER2;
     }
     ctx.fillRect(0,0, canvas.width, canvas.height);
+    drawOuroboros();
 
     // Platforms
     drawPlatforms();
@@ -234,10 +241,6 @@ function pageThree(timestamp, running) {
     if (running) {
         window.requestAnimationFrame(() => pageThree(performance.now(), true));
     }
-}
-
-function drawOuroboros() {
-    
 }
 
 /* Previous Page */

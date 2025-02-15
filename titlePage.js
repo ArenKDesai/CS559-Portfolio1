@@ -357,6 +357,14 @@ document.getElementById('nextButton').addEventListener('click', function() {
     window.location.href = 'pageTwo.html';
 });
 
+document.getElementById('prevButton').addEventListener('click', function() {
+    // Store the coordinates
+    sessionStorage.setItem("joeX", joeX);
+    sessionStorage.setItem("joeY", joeY);
+
+    window.location.href = 'index.html';
+});
+
 /* Recover Joe */
 joeX = Number(sessionStorage.getItem('joeX'));
 joeY = Number(sessionStorage.getItem('joeY'));
