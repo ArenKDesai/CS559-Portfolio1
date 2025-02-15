@@ -125,6 +125,28 @@ function drawSpinningStar(x, y) {
     ctx.restore();
 }
 
+// NOTE: For now, hard-coding the platforms. 
+let platforms = [
+    {x: 300, y: 500, width: 100, height: 20}
+];
+
+function drawPlatformsOne() {
+    ctx.save();
+
+    for (let plt of platforms) {
+        ctx.save();
+
+        ctx.transform(1,0,0,1,plt.x,plt.y)
+        ctx.fillStyle = DARKBROWN;
+        ctx.fillRect(0,0, plt.width, plt.height);
+
+        ctx.restore();
+    }
+
+    ctx.restore();
+}
+
+
 /* Draw the scene */
 function titlePage(timestamp, running) {
     // Update time
@@ -133,6 +155,13 @@ function titlePage(timestamp, running) {
 
     // Draw
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = OLDPAPER;
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+
+    // Platforms
+    drawPlatformsOne();
+    
+    // Joe
     updateJoe();
     drawJoe(joeX, joeY);
 
