@@ -5,10 +5,15 @@ const ctx = canvas.getContext('2d');
 // Position
 let x = 0;
 let y = 0;
+// Joe
 let joeX = 0;
 let joeY = 0;
+let joeVelX = 0;
 let joeVelY = 0;
 const GRAVITY = 0.5;
+const MOVE_SPEED = 3;
+const JUMP_FORCE = -4;
+let canJump = false;
 // Time Tracking
 let lastTime = 0;
 let delta = 0;
@@ -55,13 +60,41 @@ function drawBook() {
     ctx.restore();
 }
 
-function updateJoe() {
-    joeVelY += GRAVITY * (delta/100);
-    joeY += joeVelY;
 
+/* Joe */
+function updateJoe() {
+    // Handle horizontal movement
+    if (keys.left) {
+        joeVelX = -MOVE_SPEED;
+    } else if (keys.right) {
+        joeVelX = MOVE_SPEED;
+    } else {
+        joeVelX = 0;
+    }
+    
+    // Apply gravity
+    joeVelY += GRAVITY * (delta/100);
+    
+    // Update position
+    joeX += joeVelX;
+    joeY += joeVelY;
+    
+    // Check platform collisions
+    checkPlatformCollisions();
+    
+    // Ground collision
     if (joeY + 30 >= canvas.height) {
         joeY = canvas.height - 30;
         joeVelY = 0;
+        canJump = true;
+    }
+    
+    // Wall collisions
+    if (joeX - 10 < 0) {
+        joeX = 10;
+    }
+    if (joeX + 10 > canvas.width) {
+        joeX = canvas.width - 10;
     }
 }
 
@@ -127,10 +160,98 @@ function drawSpinningStar(x, y) {
 
 // NOTE: For now, hard-coding the platforms. 
 let platforms = [
-    {x: 300, y: 500, width: 100, height: 20}
+    {x: 10, y: 500, width: 120, height: 20},
+    {x: canvas.width - 130, y: 500, width: 120, height: 20}
 ];
 
-function drawPlatformsOne() {
+// Keyboard state
+const keys = {
+    left: false,
+    right: false,
+    up: false
+};
+
+// Add keyboard listeners
+document.addEventListener('keydown', (e) => {
+    switch(e.key) {
+        case 'a':
+            keys.left = true;
+            break;
+        case 'd':
+            keys.right = true;
+            break;
+        case ' ':
+            keys.up = true;
+            if (canJump) {
+                joeVelY = JUMP_FORCE;
+                canJump = false;
+            }
+            break;
+    }
+});
+
+document.addEventListener('keyup', (e) => {
+    switch(e.key) {
+        case 'a':
+            keys.left = false;
+            break;
+        case 'd':
+            keys.right = false;
+            break;
+        case ' ':
+            keys.up = false;
+            break;
+    }
+});
+
+function checkPlatformCollisions() {
+    canJump = false;
+    
+    for (let platform of platforms) {
+        // Get the edges of Joe's bounding box
+        const joeLeft = joeX - 10;
+        const joeRight = joeX + 10;
+        const joeTop = joeY;
+        const joeBottom = joeY + 30;
+        
+        // Get the edges of the platform
+        const platformLeft = platform.x;
+        const platformRight = platform.x + platform.width;
+        const platformTop = platform.y;
+        const platformBottom = platform.y + platform.height;
+        
+        // Check for collision
+        if (joeRight > platformLeft && 
+            joeLeft < platformRight && 
+            joeBottom > platformTop && 
+            joeTop < platformBottom) {
+            
+            // Coming from above
+            if (joeBottom - joeVelY <= platformTop) {
+                joeY = platformTop - 30;
+                joeVelY = 0;
+                canJump = true;
+            }
+            // Coming from below
+            else if (joeTop - joeVelY >= platformBottom) {
+                joeY = platformBottom;
+                joeVelY = 0;
+            }
+            // Coming from left
+            else if (joeRight - joeVelX <= platformLeft) {
+                joeX = platformLeft - 10;
+                joeVelX = 0;
+            }
+            // Coming from right
+            else if (joeLeft - joeVelX >= platformRight) {
+                joeX = platformRight + 10;
+                joeVelX = 0;
+            }
+        }
+    }
+}
+
+function drawPlatforms() {
     ctx.save();
 
     for (let plt of platforms) {
@@ -159,7 +280,7 @@ function titlePage(timestamp, running) {
     ctx.fillRect(0,0, canvas.width, canvas.height);
 
     // Platforms
-    drawPlatformsOne();
+    drawPlatforms();
     
     // Joe
     updateJoe();
