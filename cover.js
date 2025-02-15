@@ -113,16 +113,6 @@ function drawSpinningStar(x, y) {
     ctx.restore();
 }
 
-function drawTutorial() {
-    ctx.save();
-    ctx.fillStyle = OLDPAPER;
-    ctx.font = "24px serif";
-    ctx.textAlign = "center";
-    ctx.fillText("CONTROLS", canvas.width / 2, canvas.height / 1.5);
-    ctx.fillText("CLICK TO START", canvas.width / 2, canvas.height / 1.4);
-    ctx.restore();
-}
-
 /* Draw the scene */
 function coverPage(timestamp) {
     // Update time

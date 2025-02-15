@@ -22,3 +22,8 @@ The first number is the position of the page. The second number is the actual ch
 7. (3, 4) Fishing wand and pond. Unlocks magic missle wand. Reach through 7. 
 8. Platforms to reach 6. 
 9. Victory screen made from SVG tags and curves. 
+
+## TODO
+1. Make the pages
+2. Reorder pages and add fluff for better gameplay
+3. Clean code by replacing redundent code with modules

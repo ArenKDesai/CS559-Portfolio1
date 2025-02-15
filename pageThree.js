@@ -24,41 +24,6 @@ let DARKBROWN = "#523211";
 let BROWN = "#6e4616";
 let JOE = "#444444";
 
-/* Drawing Functions */
-function drawBook() {
-    ctx.save();
-
-    // Spine
-    ctx.fillStyle = DARKBROWN;
-    ctx.fillRect(0,0, canvas.width,canvas.height);
-
-    // Cover
-    ctx.fillStyle = BROWN;
-    ctx.translate(canvas.width/8,canvas.height/24);
-    ctx.fillRect(0,0, 6*canvas.width/8,canvas.height/1.1);
-
-    // Pages
-    ctx.fillStyle = OLDPAPER;
-    ctx.translate(6.5*canvas.width/8,-canvas.height/24);
-    ctx.fillRect(0,0, canvas.width/16,canvas.height);
-    for (let i = 0; i < 4; i++) {
-        ctx.fillStyle = OLDPAPER2;
-        ctx.translate(canvas.width/80, 0);
-        ctx.fillRect(0, 0, canvas.width/160, canvas.height);
-    }
-
-    ctx.restore();
-    // Seems strange, but just being careful
-    ctx.save();
-
-    // Title
-    ctx.fillStyle = OLDPAPER;
-    ctx.font = "48px serif";
-    ctx.textAlign = "center";
-    ctx.fillText("BOOK OF JOE", canvas.width / 2, canvas.height / 4.5);
-
-    ctx.restore();
-}
 
 /* Joe */
 function updateJoe() {
@@ -97,19 +62,6 @@ function updateJoe() {
     }
 }
 
-function drawTutorial() {
-    ctx.save();
-    ctx.fillStyle = BROWN;
-    ctx.font = "24px serif";
-    ctx.textAlign = "center";
-    ctx.fillText("SPACE: JUMP", canvas.width / 2, canvas.height / 4);
-    ctx.translate(0, 20); // NOTE: Hard-coded
-    ctx.fillText("A: MOVE LEFT", canvas.width / 2, canvas.height / 4);
-    ctx.translate(0, 20);
-    ctx.fillText("D: MOVE RIGHT", canvas.width / 2, canvas.height / 4);
-    ctx.restore();
-}
-
 function drawJoe(x, y) {
     ctx.save();
 
@@ -146,38 +98,7 @@ function drawJoe(x, y) {
 
     ctx.restore();
 }
-
-function drawSpinningStar(x, y) {
-    ctx.save();
-    ctx.translate(x, y);
-    ctx.rotate(lastTime / 1000);
-    ctx.fillStyle = OLDPAPER;
-    ctx.beginPath();
-    
-    const radius = 50; // Outer radius of the star
-    for (let i = 0; i < 5; i++) {
-        // Move to outer point
-        ctx.lineTo(0, -radius);
-        // Move to inner point
-        ctx.rotate(Math.PI * 2 / 10);
-        ctx.lineTo(0, -radius/2);
-        // Rotate for next point
-        ctx.rotate(Math.PI * 2 / 10);
-    }
-    
-    ctx.closePath();
-    ctx.fill();
-    ctx.restore();
-}
-
-// NOTE: For now, hard-coding the platforms. 
-let platforms = [
-    {x: 10, y: 500, width: 120, height: 20},
-    {x: canvas.width - 130, y: 500, width: 120, height: 20},
-    {x: 100, y: 340, width: 50, height: 20},
-    {x: canvas.width - 150, y: 340, width: 50, height: 20}
-];
-
+/* Joe Movement */
 // Keyboard state
 const keys = {
     left: false,
@@ -185,7 +106,6 @@ const keys = {
     up: false
 };
 
-// Add keyboard listeners
 document.addEventListener('keydown', (e) => {
     switch(e.key) {
         case 'a':
@@ -217,6 +137,12 @@ document.addEventListener('keyup', (e) => {
             break;
     }
 });
+
+/* Platforms */
+// NOTE: For now, hard-coding the platforms. 
+let platforms = [
+    {x: 0, y: canvas.height - 550, width: canvas.width, height: 20}
+];
 
 function checkPlatformCollisions() {
     canJump = false;
@@ -281,9 +207,8 @@ function drawPlatforms() {
     ctx.restore();
 }
 
-
-/* Draw the scene */
-function titlePage(timestamp, running) {
+/* Current Page */
+function pageThree(timestamp, running) {
     // Update time
     delta = timestamp - lastTime;
     lastTime = timestamp;
@@ -301,32 +226,61 @@ function titlePage(timestamp, running) {
     // Platforms
     drawPlatforms();
 
-    // Text
-    drawTutorial();
-    
     // Joe
     updateJoe();
     drawJoe(joeX, joeY);
 
     // Loop
     if (running) {
-        window.requestAnimationFrame(() => titlePage(performance.now(), true));
+        window.requestAnimationFrame(() => pageThree(performance.now(), true));
     }
 }
 
-function coverPage(timestamp) {
+function drawOuroboros() {
+    
+}
+
+/* Previous Page */
+function drawComment() {
+    ctx.save();
+    ctx.fillStyle = BROWN;
+    ctx.font = "24px serif";
+    ctx.textAlign = "center";
+    ctx.fillText("THE PAGE TURNS; JOE STAYS", canvas.width / 2, canvas.height / 2);
+    ctx.restore();
+}
+
+let oldPlatforms = [
+    {x: 0, y: canvas.height - 400, width: canvas.width, height: 20},
+    {x: canvas.width/2-25, y: canvas.height - 550, width: 50, height: 20}
+];
+let swatPlats = 0;
+
+function pageTwo(timestamp, running) {
     // Update time
     delta = timestamp - lastTime;
     lastTime = timestamp;
 
     // Draw
-    drawBook();
-    x = canvas.width/2;
-    y = canvas.height/2;
-    drawSpinningStar(x, y);
-    let joeX = x;
-    let joeY = y-12;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = OLDPAPER;
+    ctx.fillRect(0,0, canvas.width, canvas.height);
+    drawComment()
+
+    // Platforms
+    swatPlats = platforms;
+    platforms = oldPlatforms;
+    drawPlatforms();
+    platforms = swatPlats;
+
+    // Joe
+    updateJoe();
     drawJoe(joeX, joeY);
+
+    // Loop
+    if (running) {
+        window.requestAnimationFrame(() => pageThree(performance.now(), true));
+    }
 }
 
 let turned = false; // Track if page has turned
@@ -336,7 +290,7 @@ function animatePageTurn(i, prevPage) {
         ctx.save();
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         // Manually draw page under turning page
-        titlePage(performance.now(), false);
+        pageThree(performance.now(), false);
         // Turn page
         ctx.transform(1-i/50, 0, 0, 1, 0, 0);
         prevPage(performance.now());
@@ -344,12 +298,20 @@ function animatePageTurn(i, prevPage) {
         window.requestAnimationFrame(() => animatePageTurn(i + 1, prevPage));
     }
     else {
-        window.requestAnimationFrame(() => titlePage(performance.now(), true));
+        window.requestAnimationFrame(() => pageThree(performance.now(), true));
     }
 }
 
 /* Setup Buttons */
 document.getElementById('nextButton').addEventListener('click', function() {
+    // Store the coordinates
+    sessionStorage.setItem("joeX", joeX);
+    sessionStorage.setItem("joeY", joeY);
+
+    window.location.href = 'pageFour.html';
+});
+
+document.getElementById('prevButton').addEventListener('click', function() {
     // Store the coordinates
     sessionStorage.setItem("joeX", joeX);
     sessionStorage.setItem("joeY", joeY);
@@ -363,4 +325,4 @@ joeY = Number(sessionStorage.getItem('joeY'));
 
 /* Begin Drawing */
 lastTime = performance.now();
-animatePageTurn(0, coverPage);
+animatePageTurn(0, pageTwo);
