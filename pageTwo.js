@@ -332,7 +332,7 @@ document.getElementById('prevButton').addEventListener('click', function() {
     sessionStorage.setItem("joeX", joeX);
     sessionStorage.setItem("joeY", joeY);
 
-    window.location.href = 'titlePage.html';
+    window.location.href = 'pageOne.html';
 });
 
 /* Recover Joe */

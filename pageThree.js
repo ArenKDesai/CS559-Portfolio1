@@ -210,7 +210,11 @@ function drawPlatforms() {
 }
 
 function drawOuroboros() {
+    ctx.save();
+
     ouroboros(ctx);
+    
+    ctx.restore();
 }
 
 /* Current Page */

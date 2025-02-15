@@ -1,5 +1,3 @@
-function ouroboros(ctx) {
+export function ouroboros(ctx) {
     
 }
-
-export { ouroboros };

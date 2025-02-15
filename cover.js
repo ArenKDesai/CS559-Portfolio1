@@ -138,7 +138,7 @@ document.getElementById('nextButton').addEventListener('click', function() {
     sessionStorage.setItem("joeX", joeX);
     sessionStorage.setItem("joeY", joeY);
 
-    window.location.href = 'titlePage.html';
+    window.location.href = 'pageOne.html';
 });
 
 /* Begin Drawing */
